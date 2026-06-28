@@ -8,7 +8,7 @@
 
 ```
 Actúa como un experto en maquetación LaTeX académica y robótica. Trabaja sobre el archivo:
-/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini/Informe_Hito.tex
+<WORKSPACE_ROOT>/Gemini/Informe_Hito.tex
 
 REGLA ESTRICTA: No usar cálculo infinitesimal (límites, derivadas, integrales). Solo álgebra y trigonometría.
 
@@ -98,7 +98,7 @@ Compila con: pdflatex -interaction=nonstopmode Informe_Hito.tex (2 veces para re
 
 ```
 Actúa como un experto en visualización científica con Python/Matplotlib. Trabaja sobre:
-/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini/generate_plots.py
+<WORKSPACE_ROOT>/Gemini/generate_plots.py
 
 PROBLEMA ACTUAL: En la función generate_workspace_3d(), la perspectiva del brazo robot genera una vista en la que los eslabones se ven prácticamente como una línea vertical recta. El ángulo de cámara no permite distinguir bien las dos partes del brazo.
 
@@ -139,7 +139,7 @@ Después de editar, ejecuta: python3 generate_plots.py
 
 ```
 Actúa como un experto en maquetación Beamer/LaTeX. Trabaja sobre:
-/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini/Presentacion_Hito.tex
+<WORKSPACE_ROOT>/Gemini/Presentacion_Hito.tex
 
 PROBLEMAS IDENTIFICADOS:
 1. En la diapositiva 5 ("Espacio de Trabajo Factible"), la imagen workspace_3d.png se sale por abajo de la presentación y el texto de los items se corta. El "Simetría radial completa" queda fuera de pantalla.
@@ -187,7 +187,7 @@ Compila con: pdflatex -interaction=nonstopmode Presentacion_Hito.tex (2 veces).
 
 ```
 Actúa como experto en interfaces gráficas con Matplotlib en Python. Trabaja sobre:
-/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini/simulador_3d.py
+<WORKSPACE_ROOT>/Gemini/simulador_3d.py
 
 PROBLEMA ACTUAL: El panel de texto informativo ("POSICIÓN EFECTOR") se sobrepone con el título del simulador "SIMULADOR INTERACTIVO 3D...". Además, la etiqueta de posición en 3D del efector "P(11.2, 0.0, 14.7)" queda encima de los elementos del workspace y la leyenda.
 
@@ -223,7 +223,7 @@ No ejecutes el simulador (necesita display gráfico), solo guarda los cambios.
 ```
 Después de haber completado todos los cambios anteriores, ejecuta los siguientes comandos para sincronizar los archivos actualizados con la bóveda de Obsidian:
 
-cd "/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini"
+cd "<WORKSPACE_ROOT>/Gemini"
 
 # Regenerar gráficos
 python3 generate_plots.py
@@ -235,8 +235,8 @@ pdflatex -interaction=nonstopmode Presentacion_Hito.tex
 pdflatex -interaction=nonstopmode Presentacion_Hito.tex
 
 # Copiar a Obsidian
-cp -f simulador_3d.py generate_plots.py Informe_Hito.tex Informe_Hito.pdf Presentacion_Hito.tex Presentacion_Hito.pdf SYSTEM_PROMPT_WEB.md SYSTEM_PROMPT.md logo_uss.png workspace_3d.png stress_analysis.png "/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/ObsidianVault/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini/"
-cp -f Informe_Hito.pdf Presentacion_Hito.pdf "/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/ObsidianVault/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Evaluaciones/Solemnes/Hito/"
+cp -f simulador_3d.py generate_plots.py Informe_Hito.tex Informe_Hito.pdf Presentacion_Hito.tex Presentacion_Hito.pdf SYSTEM_PROMPT_WEB.md SYSTEM_PROMPT.md logo_uss.png workspace_3d.png stress_analysis.png "<OBSIDIAN_VAULT>/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini/"
+cp -f Informe_Hito.pdf Presentacion_Hito.pdf "<OBSIDIAN_VAULT>/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Evaluaciones/Solemnes/Hito/"
 ```
 
 ---

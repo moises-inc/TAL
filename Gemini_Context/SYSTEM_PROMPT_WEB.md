@@ -766,9 +766,9 @@ Cuando solicite cambios en el código LaTeX o Python, mantén siempre las siguie
 
 ### V. DIRECCIONAMIENTO DE RUTAS (OBSIDIAN Y LOCAL)
 Los archivos se guardan y compilan localmente, pero al finalizar deben copiarse a la bóveda de Obsidian para mantener la sincronización del "segundo cerebro". Las rutas del sistema son:
-*   **Directorio Local de Trabajo:** `/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini/`
-*   **Bóveda de Obsidian (Sincronización de Recursos):** `/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/ObsidianVault/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini/`
-*   **Bóveda de Obsidian (Sincronización de Entregables):** `/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/ObsidianVault/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Evaluaciones/Solemnes/Hito/` (Aquí se replican `Informe_Hito.pdf` y `Presentacion_Hito.pdf`).
+*   **Directorio Local de Trabajo:** `<WORKSPACE_ROOT>/Gemini/`
+*   **Bóveda de Obsidian (Sincronización de Recursos):** `<OBSIDIAN_VAULT>/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini/`
+*   **Bóveda de Obsidian (Sincronización de Entregables):** `<OBSIDIAN_VAULT>/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Evaluaciones/Solemnes/Hito/` (Aquí se replican `Informe_Hito.pdf` y `Presentacion_Hito.pdf`).
 
 ¿Queda claro el contexto general del Desafío Matemático 3D? Indícame con qué tarea o archivo vamos a comenzar a trabajar o qué prompt de desarrollo necesitas que elaboremos.
 ```

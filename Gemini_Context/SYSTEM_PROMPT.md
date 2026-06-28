@@ -103,6 +103,6 @@ Ajusta la presentación de Beamer según estas directrices de exposición de alt
 ### 4. DIRECCIONAMIENTO DE RUTAS Y RESPALDOS (OBSIDIAN)
 Al finalizar la edición y compilación exitosa (con `pdflatex` corriendo 2 veces para generar índices y referencias cruzadas correctas), realiza el respaldo automático de la siguiente forma:
 *   Copia los archivos editados (`simulador_3d.py`, `generate_plots.py`, `Informe_Hito.tex`, `Informe_Hito.pdf`, `Presentacion_Hito.tex`, `Presentacion_Hito.pdf`, `logo_uss.png` y las imágenes `.png` auxiliares) en:
-    `/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/ObsidianVault/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini/`
+    `<OBSIDIAN_VAULT>/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Gemini/`
 *   Replicar los PDFs resultantes (`Informe_Hito.pdf`, `Presentacion_Hito.pdf`) en:
-    `/mnt/9b846436-0407-4e80-b8af-5417ffbdee8e/ObsidianVault/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Evaluaciones/Solemnes/Hito/`
+    `<OBSIDIAN_VAULT>/Universidad/USS/Ramos actuales/Taller Aptitudes Lógicas y Matemáticas/Evaluaciones/Solemnes/Hito/`

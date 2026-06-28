@@ -1,9 +1,33 @@
+# System files
+.DS_Store
+Thumbs.db
+thumbs.db
+
+# Python temporary and cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+.env
+
+# LaTeX auxiliary files (in case documents are compiled in-place)
 *.aux
 *.log
-*.out
 *.toc
 *.synctex.gz
+*.out
 *.nav
 *.snm
-__pycache__/
-.DS_Store
+*.fls
+*.fdb_latexmk
+*.pdfsync
+*.blg
+*.bbl
+
+# Local secrets or config
+.idea/
+.vscode/
+*.local
