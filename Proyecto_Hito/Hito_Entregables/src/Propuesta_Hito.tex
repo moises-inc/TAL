@@ -1,0 +1,203 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{tabularx}
+
+% --- MÁRGENES ---
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm, headheight=13.6pt}
+
+% --- PALETA DE COLORES INSTITUCIONALES USS ---
+\definecolor{USSBlue}{RGB}{0, 32, 91}    % Azul marino
+\definecolor{USSGold}{RGB}{212, 175, 55} % Dorado
+\definecolor{LightGray}{RGB}{240, 240, 240}
+\definecolor{GanttBlue}{RGB}{41, 128, 185}
+
+% --- ESTILO DE ENCABEZADO Y PIE DE PÁGINA ---
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textcolor{USSBlue}{\textbf{TALM 2026}}}
+\rhead{\textcolor{USSGold}{Hito - Desafío Matemático}}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.8pt}
+
+% --- FORMATO DE SECCIONES ---
+\titleformat{\section}{\color{USSBlue}\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}{\color{USSBlue}\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+% --- DETALLES DEL DOCUMENTO ---
+\title{
+  \vspace{-1.5cm}
+  \includegraphics[width=6cm]{logo_uss.png} \\ % Para cuando se compile localmente con la imagen
+  \vspace{1cm}
+  \textcolor{USSBlue}{\textbf{\Huge Desafío Matemático 2026}} \\
+  \textcolor{USSGold}{\Large Propuesta de Hito: Modelamiento Cinemático y Espacial de un Brazo Robótico Antropomórfico 3D (3 GDL)}
+}
+\author{
+  \textbf{Integrantes:} Moisés Amundarain, Fernando Ramírez, Juan Pablo Vargas \\[0.2cm]
+  \textbf{Carrera:} Ingeniería Civil Informática \\
+  \textbf{Institución:} Facultad de Ingeniería, Universidad San Sebastián
+}
+\date{\textbf{Fecha de Entrega:} 3 de Junio, 2026}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Introducción}
+
+\subsection{Planteamiento del Problema y Contextualización}
+En la industria manufacturera moderna, la automatización a través de brazos robóticos es crucial para realizar tareas de alta precisión como la deposición de material en impresión 3D a gran escala, soldadura automatizada, pintura automotriz y operaciones de ensamblaje. Un problema central en la ingeniería de control y robótica consiste en determinar con precisión milimétrica la posición de la herramienta o efector final del robot a partir de los ángulos girados por sus motores.
+
+Este proyecto propone el estudio y la simulación espacial de un \textbf{brazo robótico antropomórfico de 3 Grados de Libertad (3 GDL)}. Este robot representa una evolución sofisticada de un modelo bidimensional planar (2D) hacia un modelo tridimensional (3D). Físicamente, el sistema modela los primeros tres ejes de movimiento (cintura, hombro y codo) de un robot industrial real, tales como los diseños comerciales de KUKA o ABB.
+
+La transición de 2D a 3D expande la zona de trabajo (workspace) de una simple superficie circular plana a un volumen tridimensional parcial que describe una sección esférica. Estudiar este comportamiento permite a los ingenieros programar trayectorias libres de colisiones y optimizar el consumo energético del robot en celdas de trabajo reales.
+
+\subsection{Objetivos}
+\textbf{Objetivo General:}
+\begin{itemize}
+    \item Modelar matemáticamente la cinemática directa de un brazo robótico antropomórfico de 3 GDL operando en el espacio tridimensional utilizando exclusivamente herramientas de álgebra lineal y trigonometría elemental, y validar su volumen de trabajo mediante una herramienta interactiva de simulación digital.
+\end{itemize}
+
+\textbf{Objetivos Específicos:}
+\begin{itemize}
+    \item Deducir las ecuaciones analíticas de coordenadas cartesianas $(x, y, z)$ del efector final a partir de las proyecciones vectoriales y sumas de ángulos.
+    \item Definir con rigor el espacio de variables independientes, dependientes y los parámetros geométricos del sistema en el marco de la metodología de investigación (WOI).
+    \item Diseñar y ejecutar un simulador visual en 3D en Python que permita simular físicamente los límites de movilidad articular del robot.
+    \item Analizar la robustez del modelo matemático frente a variaciones de los parámetros y documentar sus limitaciones operacionales en entornos industriales reales.
+\end{itemize}
+
+\newpage
+
+\section{Metodología de Trabajo}
+
+\subsection{Variables y Parámetros del Sistema (WOI)}
+Para modelar y simular el comportamiento físico del brazo antropomórfico de 3 GDL, se definen formalmente las siguientes variables e indicadores:
+
+\begin{table}[H]
+\centering\small
+\caption{\textbf{Definición de Variables y Parámetros Operacionales}}
+\vspace{0.3cm}
+\begin{tabularx}{\textwidth}{l c X l l}
+\toprule
+\textbf{Tipo} & \textbf{Símbolo} & \textbf{Significado Físico} & \textbf{Unidad} & \textbf{Tipo de Dato} \\
+\midrule
+Variable Independiente & $\theta_1$ & Ángulo de rotación de la base (Yaw) & Grados ($^\circ$) / Rad & Real continuo \\
+Variable Independiente & $\theta_2$ & Ángulo de elevación del hombro (Pitch) & Grados ($^\circ$) / Rad & Real continuo \\
+Variable Independiente & $\theta_3$ & Ángulo de flexión del codo (Pitch rel.) & Grados ($^\circ$) / Rad & Real continuo \\
+\rowcolor{LightGray}
+Variable Dependiente & $x$ & Coordenada cartesiana lateral (Eje X) & Centímetros (cm) & Real continuo \\
+\rowcolor{LightGray}
+Variable Dependiente & $y$ & Coordenada cartesiana profundidad (Eje Y) & Centímetros (cm) & Real continuo \\
+\rowcolor{LightGray}
+Variable Dependiente & $z$ & Coordenada cartesiana vertical (Eje Z) & Centímetros (cm) & Real continuo \\
+Parámetro de Diseño & $L_1$ & Longitud del primer eslabón (Hombro-Codo) & Centímetros (cm) & Constante ($10.0$ cm) \\
+Parámetro de Diseño & $L_2$ & Longitud del segundo eslabón (Codo-Muñeca) & Centímetros (cm) & Constante ($10.0$ cm) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Supuestos del Modelo}
+Para garantizar la viabilidad matemática de este proyecto bajo un enfoque trigonométrico elemental, se plantean los siguientes supuestos:
+\begin{enumerate}
+    \item \textbf{Cuerpo Rígido:} Se asume que los eslabones $L_1$ y $L_2$ son infinitamente rígidos y no sufren flexiones o deformaciones elásticas bajo carga.
+    \item \textbf{Geometría Lineal:} Se modela a los eslabones como segmentos de línea ideales de grosor nulo, omitiendo el volumen de los motores y carcasas físicas.
+    \item \textbf{Precisión Articular Estática:} No se considera el juego mecánico (holgura de los engranajes) ni la inercia dinámica de los motores; los ángulos indicados por los sensores corresponden exactamente a la orientación geométrica de los brazos.
+\end{enumerate}
+
+\subsection{Construcción del Modelo Matemático}
+La posición cartesiana en 3D se modela a través de la descomposición de vectores geométricos en planos ortogonales. 
+\begin{enumerate}
+    \item Consideramos en primer lugar la proyección horizontal radial $r$, la cual representa la distancia horizontal desde el eje vertical Z hasta la proyección de la punta del brazo sobre el plano $XY$. Analizando el plano vertical de elevación, esta distancia es la suma de las proyecciones horizontales de cada eslabón:
+    $$r = L_1 \cdot \cos(\theta_2) + L_2 \cdot \cos(\theta_2 + \theta_3)$$
+    
+    \item La rotación de la base alrededor del eje Z ($\theta_1$) proyecta esta distancia radial $r$ sobre los ejes coordenados ortogonales $X$ e $Y$:
+    $$x = r \cdot \cos(\theta_1) = \left( L_1 \cdot \cos(\theta_2) + L_2 \cdot \cos(\theta_2 + \theta_3) \right) \cos(\theta_1)$$
+    $$y = r \cdot \sin(\theta_1) = \left( L_1 \cdot \cos(\theta_2) + L_2 \cdot \cos(\theta_2 + \theta_3) \right) \sin(\theta_1)$$
+    
+    \item Finalmente, la altura vertical $z$ se calcula sumando las proyecciones verticales directas de ambos brazos de elevación:
+    $$z = L_1 \cdot \sin(\theta_2) + L_2 \cdot \sin(\theta_2 + \theta_3)$$
+\end{enumerate}
+
+Este sistema de tres ecuaciones paramétricas acopladas tridimensionales modela la cinemática directa del efector final.
+
+\subsection{Interpretación del Modelo y Análisis de Rangos}
+El modelo matemático revela cómo las coordenadas espaciales están restringidas por los límites angulares físicos de los motores:
+\begin{itemize}
+    \item $\theta_1 \in [-180^\circ, 180^\circ]$ permite una rotación completa alrededor del robot.
+    \item $\theta_2 \in [-90^\circ, 90^\circ]$ limita la elevación a una semiesfera superior e inferior.
+    \item $\theta_3 \in [-150^\circ, 150^\circ]$ evita el auto-choque mecánico de la estructura física del brazo.
+\end{itemize}
+
+El radio de alcance máximo del efector final desde el origen espacial ocurre cuando los brazos están completamente alineados ($\theta_3 = 0^\circ$ y $\theta_2 = 0^\circ$):
+$$R_{\text{max}} = L_1 + L_2 = 20\text{ cm}$$
+
+Todo punto factible de operación $(x,y,z)$ debe cumplir con la desigualdad de volumen esférico:
+$$x^2 + y^2 + z^2 \leq (L_1 + L_2)^2 = 400\text{ cm}^2$$
+
+\newpage
+
+\section{Planificación del Proyecto (Carta Gantt)}
+
+Para asegurar la ejecución y el cumplimiento riguroso de cada hito académico del Desafío Matemático, se diseña la siguiente planificación en formato de Carta Gantt. En la tabla se representan las semanas del semestre mediante columnas del bloque, marcando con azul (\colorbox{GanttBlue}{\phantom{W}}) las tareas activas durante ese periodo.
+
+\vspace{0.5cm}
+
+\begin{table}[H]
+\centering\small
+\caption{\textbf{Carta Gantt de Planificación Temporal (Mayo - Julio)}}
+\vspace{0.3cm}
+\begin{tabular}{l c ccccc}
+\toprule
+\textbf{Actividad / Tarea} & \textbf{Responsable} & \textbf{W1} & \textbf{W2} & \textbf{W3} & \textbf{W4} & \textbf{W5} \\
+ & & \shortstack{\small 27/05 \\ \small 02/06} & \shortstack{\small 03/06 \\ \small 09/06} & \shortstack{\small 10/06 \\ \small 16/06} & \shortstack{\small 17/06 \\ \small 23/06} & \shortstack{\small 24/06 \\ \small 01/07} \\
+\midrule
+Definición de Grupo y Tema & Todos & \cellcolor{GanttBlue} & & & & \\
+Planteamiento y Carta Gantt & Todos & \cellcolor{GanttBlue} & & & & \\
+Redacción de Propuesta Hito & Todos & \cellcolor{GanttBlue} & & & & \\
+\rowcolor{LightGray}
+\textbf{Evaluación Grupal \#2 (Hito)} & Todos & & \cellcolor{GanttBlue} & & & \\
+Desarrollo Simulador 3D (Python) & Programadores & & \cellcolor{GanttBlue} & & & \\
+Borrador de Informe (LaTeX) & Editores & & \cellcolor{GanttBlue} & & & \\
+\rowcolor{LightGray}
+\textbf{Presentación Voluntaria} & Presentadores & & & \cellcolor{GanttBlue} & & \\
+Pruebas de Presión y Gráficos & Analistas & & & \cellcolor{GanttBlue} & & \\
+Revisión Final USS & Todos & & & \cellcolor{GanttBlue} & & \\
+\rowcolor{LightGray}
+\textbf{Exposiciones Obligatorias} & Todos & & & & \cellcolor{GanttBlue} & \\
+\rowcolor{LightGray}
+\textbf{Entrega Informe Impreso} & Todos & & & & \cellcolor{GanttBlue} & \\
+Post-Test y Cierre Académico & Todos & & & & & \cellcolor{GanttBlue} \\
+Revisión Actas Finales & Todos & & & & & \cellcolor{GanttBlue} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.5cm}
+
+\section{Preguntas Estratégicas para Defensa de Proyecto}
+Con el fin de ``someter a presión'' el modelo de cara a la defensa del proyecto, se plantean las siguientes preguntas investigativas clave:
+\begin{enumerate}
+    \item \textbf{Simplificación Dimensional:} ¿Es matemáticamente riguroso demostrar la robustez del modelo tridimensional simplificando el análisis de sensibilidad al plano bidimensional $r-z$ bajo el supuesto de simetría axial respecto a $\theta_1$?
+    \item \textbf{Física del Volumen:} ¿De qué manera impactaría la incorporación del volumen físico real de los eslabones en el rango de colisiones del brazo, y cómo se puede representar esto algebraicamente mediante inecuaciones espaciales?
+    \item \textbf{Análisis de Sensibilidad de Tolerancias:} Si los actuadores tienen un error de precisión angular de $\pm 1^\circ$, ¿cuál es el radio de error espacial máximo en centímetros en la punta del robot?
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,325 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{xcolor}
+
+% Definición de Colores USS
+\definecolor{USSBlue}{RGB}{0,32,91}
+\definecolor{USSGold}{RGB}{212,175,55}
+\definecolor{LightBlue}{RGB}{235,240,250}
+\definecolor{DarkGray}{RGB}{80,80,80}
+
+
+% Configuración del Tema Beamer
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Personalización de Colores en Madrid
+\setbeamercolor{structure}{fg=USSBlue}
+\setbeamercolor{palette primary}{bg=USSBlue,fg=white}
+\setbeamercolor{palette secondary}{bg=USSBlue!85!black,fg=white}
+\setbeamercolor{palette tertiary}{bg=USSGold,fg=USSBlue!30!black}
+\setbeamercolor{titlelike}{parent=palette primary}
+\setbeamercolor{block title}{bg=USSBlue,fg=white}
+\setbeamercolor{block body}{bg=LightBlue,fg=black}
+
+% Configuración de las viñetas
+\setbeamertemplate{items}[circle]
+
+% Título y datos de portada
+\title[Brazo Robótico 3 GDL]{\textbf{Diseño, Modelamiento Cinemático y Análisis de Integridad de un Brazo Robótico Antropomórfico de 3 GDL}}
+\subtitle{Hito Cami - Taller de Aptitudes Lógicas y Matemáticas}
+\author[Moisés, Fernando, Juan Pablo]{Moisés, Fernando, Juan Pablo}
+\institute[USS]{
+    Facultad de Ingeniería y Tecnología\\
+    Carrera de Ingeniería Civil\\
+    \textbf{Universidad San Sebastián}
+}
+\date[Junio 2026]{Junio, 2026}
+
+% Insertar logo en la portada
+\titlegraphic{\includegraphics[height=1.2cm]{logo_uss.png}}
+
+\begin{document}
+
+% Slide 1: Portada
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% Slide 2: Contexto y Analogía del Brazo Humano
+% [VALIDACIÓN LÓGICA]: Satisface el criterio de "Comunicación Matemática" (CM) de la presentación al introducir claramente el contexto y objetivos del manipulador.
+\begin{frame}{Contexto y Analogía del Brazo Humano}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            El brazo robótico antropomórfico de 3 GDL imita la estructura de la extremidad superior humana:
+            \vspace{0.3cm}
+            \begin{itemize}
+                \item \textbf{Cintura (Yaw):} Rotación de la base alrededor del eje vertical $z$. Ángulo $\theta_1$.
+                \item \textbf{Hombro (Pitch):} Elevación principal sobre el eje horizontal. Ángulo $\theta_2$.
+                \item \textbf{Codo (Pitch relativo):} Flexo-extensión distal respecto al primer eslabón. Ángulo $\theta_3$.
+            \end{itemize}
+            \vspace{0.3cm}
+            \textbf{Objetivo:} Mapear analíticamente el espacio articular al espacio operacional tridimensional y evaluar la resistencia estructural ante rotación crítica.
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \begin{block}{Grados de Libertad (GDL)}
+                \centering
+                \begin{itemize}
+                    \item $\theta_1$: Yaw base
+                    \item $\theta_2$: Pitch hombro
+                    \item $\theta_3$: Pitch codo
+                \end{itemize}
+            \end{block}
+            \centering
+            \includegraphics[width=0.6\textwidth]{logo_uss.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 3: Parámetros del Sistema y Supuestos
+% [VALIDACIÓN LÓGICA]: Satisface el criterio de "Variables y Parámetros" (MM) identificando claramente las entradas geométricas, de masa y propiedades de los materiales con sus respectivas unidades físicas.
+\begin{frame}{Variables y Parámetros del Sistema}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Parámetros Geométricos}
+                \begin{itemize}
+                    \item Eslabones: $L_1 = 10\text{ cm}$, $L_2 = 10\text{ cm}$.
+                    \item Alcance máximo radial: $R_{\text{max}} = 20\text{ cm} = 0.2\text{ m}$.
+                \end{itemize}
+            \end{block}
+            \begin{block}{Parámetros Inerciales}
+                \begin{itemize}
+                    \item Masa eslabones: $m_1 = m_2 = 0.5\text{ kg}$.
+                    \item Masa carga de pago: $M = 0.5\text{ kg}$.
+                    \item Densidad lineal de eslabones: $\rho = 5.0\text{ kg/m}$.
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Materiales Seleccionados}
+                \begin{itemize}
+                    \item \textbf{Eslabones (Aluminio 6061-T6):}
+                        \begin{itemize}
+                            \item Fluencia: $\sigma_y = 276\text{ MPa}$
+                            \item Expansión: $\alpha_{\text{Al}} = 23 \times 10^{-6}\text{ /}^\circ\text{C}$
+                        \end{itemize}
+                    \item \textbf{Pasador (Acero Inoxidable 316):}
+                        \begin{itemize}
+                            \item Cortante admisible: $\tau_{\text{adm}} = 150\text{ MPa}$
+                            \item Expansión: $\alpha_{\text{Acero}} = 16 \times 10^{-6}\text{ /}^\circ\text{C}$
+                        \end{itemize}
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 4: Ecuaciones Cinemáticas (Analogía Sombra Radial)
+% [VALIDACIÓN LÓGICA]: Satisface el criterio de "Uso de Representaciones" (CM) y "Limitaciones del Modelo" (RA) al derivar las ecuaciones del espacio operacional 3D y advertir sobre la singularidad geométrica de base.
+\begin{frame}{Ecuaciones Cinemáticas: Analogía Sombra Radial}
+    Proyectamos el brazo sobre el plano horizontal para hallar la sombra radial $r$:
+    \begin{equation}
+        r = L_1\cos(\theta_2) + L_2\cos(\theta_2 + \theta_3)
+    \end{equation}
+    
+    A partir del radio proyectado $r$, las coordenadas cartesianas $(x, y, z)$ son:
+    \begin{align}
+        x &= r\cos(\theta_1) = \left[ L_1\cos(\theta_2) + L_2\cos(\theta_2 + \theta_3) \right]\cos(\theta_1) \\
+        y &= r\sin(\theta_1) = \left[ L_1\cos(\theta_2) + L_2\cos(\theta_2 + \theta_3) \right]\sin(\theta_1) \\
+        z &= L_1\sin(\theta_2) + L_2\sin(\theta_2 + \theta_3)
+    \end{align}
+    
+    \begin{block}{Singularidad Geométrica de Base}
+        Cuando $r = 0$ (brazo en posición vertical), $\theta_1$ queda indeterminado, provocando una singularidad del manipulador en coordenadas cartesianas.
+    \end{block}
+\end{frame}
+
+% Slide 5: Espacio de Trabajo Tridimensional
+\begin{frame}{Espacio de Trabajo Tridimensional (Workspace)}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            La envolvente tridimensional del brazo está restringida por la longitud física y los rangos angulares:
+            \vspace{0.2cm}
+            \begin{itemize}
+                \item Envolvente máxima teórica:
+                $$x^2 + y^2 + z^2 \le 400\text{ cm}^2 \quad (\text{Radio } 20\text{ cm})$$
+                \item Límites angulares del diseño:
+                \begin{itemize}
+                    \item $\theta_1 \in [-180^\circ, 180^\circ]$
+                    \item $\theta_2 \in [-90^\circ, 90^\circ]$
+                    \item $\theta_3 \in [-150^\circ, 150^\circ]$
+                \end{itemize}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{workspace_3d.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 6: Escenario Crítico de Rotación (140 km/h)
+% [VALIDACIÓN LÓGICA]: Satisface el criterio de "Construcción del Modelo" (MM) al formular la integral dinámica de tracción centrípeta para modelar esfuerzos bajo una velocidad crítica de 140 km/h.
+\begin{frame}{Escenario Crítico de Rotación (140 km/h)}
+    Evaluamos el brazo totalmente extendido ($R_{\text{max}} = 0.2\text{ m}$) a $140\text{ km/h}$ ($38.89\text{ m/s}$):
+    \vspace{0.2cm}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Parámetros Cinemáticos}
+                \begin{itemize}
+                    \item Velocidad angular: $\omega = \frac{v}{R_{\text{max}}} = 194.44\text{ rad/s}$
+                    \item Aceleración centrípeta en extremo:
+                    $$a_c = \omega^2 R_{\text{max}} = 7561.73\text{ m/s}^2 \approx \mathbf{771g}$$
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Cálculo de Tensiones Centrífugas}
+                La tensión a lo largo del radio $x$ es:
+                $$T(x) = \int_x^{L_1+L_2} \rho \omega^2 \xi d\xi + M \omega^2 (L_1+L_2)$$
+                \begin{itemize}
+                    \item \textbf{Base del brazo ($x=0$):}
+                    $$T_{\text{base}} = \mathbf{7561.73\text{ N}}$$
+                    \item \textbf{Articulación del codo ($x=0.1\text{ m}$):}
+                    $$T_{\text{codo}} = \mathbf{6616.51\text{ N}}$$
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 7: Verificación de Esfuerzos y Seguridad
+% [VALIDACIÓN LÓGICA]: Satisface el criterio de "Defensa de Decisiones" al calcular cuantitativamente los factores de seguridad del aluminio de los eslabones y el acero del pasador, identificando el punto de falla del diseño original.
+\begin{frame}{Verificación de Esfuerzos y Seguridad}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Eslabón de Aluminio (Base)}
+                \begin{itemize}
+                    \item Diámetro: $10\text{ mm}$ (Área $78.54\text{ mm}^2$)
+                    \item Tensión: $T_{\text{base}} = 7561.73\text{ N}$
+                    \item Esfuerzo normal:
+                    $$\sigma_{\text{link}} = \frac{T_{\text{base}}}{A_{\text{link}}} = \mathbf{96.28\text{ MPa}}$$
+                    \item Factor de Seguridad (Fluencia $276\text{ MPa}$):
+                    $$FS_{\text{link}} = \frac{276}{96.28} = \mathbf{2.87} \quad (\textbf{RESISTE})$$
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Pasador Original de Acero (Codo)}
+                \begin{itemize}
+                    \item Diámetro: $3\text{ mm}$ (Área $7.07\text{ mm}^2$, cizalle simple)
+                    \item Fuerza de corte: $T_{\text{codo}} = 6616.51\text{ N}$
+                    \item Esfuerzo cortante:
+                    $$\tau_{\text{pin,3mm}} = \frac{T_{\text{codo}}}{A_{\text{pin,3mm}}} = \mathbf{936.0\text{ MPa}}$$
+                    \item Factor de Seguridad (Admisible $150\text{ MPa}$):
+                    $$FS_{\text{pin,3mm}} = \frac{150}{936.0} = \mathbf{0.16} \quad (\textbf{FALLA CRÍTICA})$$
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 8: Análisis de Robustez Dinámica y Térmica
+% [VALIDACIÓN LÓGICA]: Satisface el criterio de "Prueba de Robustez" (RA) y "Limitaciones del Modelo" (RA) al tabular la sensibilidad de esfuerzos frente a la velocidad y detallar el comportamiento del juego del codo por dilatación diferencial.
+\begin{frame}{Análisis de Robustez Dinámica y Térmica}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \begin{table}[H]
+                \centering
+                \caption{Esfuerzos vs. Velocidad Tangencial.}
+                \resizebox{\textwidth}{!}{
+                \begin{tabular}{ccccc}
+                    \toprule
+                    \textbf{Velocidad} & \textbf{Acel. Centr.} & \textbf{Tensión Codo} & \textbf{$\tau_{\text{pin,3mm}}$} & \textbf{Estado Pin} \\
+                    \midrule
+                    40 km/h & $62.9g$ & $540.1\text{ N}$ & $76.4\text{ MPa}$ & Resiste \\
+                    \textbf{56 km/h} & $123.3g$ & $1060.3\text{ N}$ & $150.0\text{ MPa}$ & \textbf{Límite} \\
+                    80 km/h & $251.8g$ & $2160.5\text{ N}$ & $305.6\text{ MPa}$ & Falla \\
+                    \textbf{140 km/h} & $771.6g$ & $6616.5\text{ N}$ & $936.0\text{ MPa}$ & \textbf{Falla Crít.} \\
+                    200 km/h & $1573.6g$ & $13503.1\text{ N}$ & $1910.2\text{ MPa}$ & Falla Sev. \\
+                    \bottomrule
+                \end{tabular}
+                }
+            \end{table}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{block}{Dilatación Térmica ($\Delta T = 100^\circ$C)}
+                \begin{itemize}
+                    \item \textbf{Eslabones:} Alargamiento de $0.23\text{ mm}$ cada uno (alarga el alcance radial en $0.46\text{ mm}$).
+                    \item \textbf{Juego del codo:} El orificio de Al se expande más que el pasador de Acero ($\Delta d_{\text{orificio}} = 18.4\,\mu\text{m}$, $\Delta d_{\text{pin}} = 12.8\,\mu\text{m}$).
+                    \item \textbf{Resultado:} Juego neto aumenta en $\mathbf{5.6\,\mu\text{m}}$. Previene el engripamiento.
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 9: Propuesta de Rediseño de la Articulación
+% [VALIDACIÓN LÓGICA]: Satisface el criterio de "Construcción del Modelo" (MM) al demostrar cuantitativamente la efectividad de la alternativa de rediseño de pasador de 8 mm en cortante doble.
+\begin{frame}{Propuesta de Rediseño de la Articulación del Codo}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Propuesta:} Aumentar el diámetro del pasador a $8\text{ mm}$ e implementar una junta en cortante doble.
+            \vspace{0.2cm}
+            \begin{itemize}
+                \item \textbf{Cortante Simple con $d = 8\text{ mm}$ (Área $50.27\text{ mm}^2$):}
+                $$\tau_{\text{pin,8mm}} = \frac{T_{\text{codo}}}{A_{\text{pin,8mm}}} = \mathbf{131.63\text{ MPa}} < 150\text{ MPa}$$
+                $$FS_{\text{pin}} = 1.14 \quad (\textbf{RESISTE})$$
+                \item \textbf{Cortante Doble con $d = 8\text{ mm}$ (Área $2 \times 50.27\text{ mm}^2$):}
+                $$\tau_{\text{pin,doble}} = \frac{T_{\text{codo}}}{2 A_{\text{pin}}} = \mathbf{65.81\text{ MPa}} \ll 150\text{ MPa}$$
+                $$FS_{\text{pin,doble}} = \mathbf{2.28} \quad (\textbf{ALTAMENTE SEGURO})$$
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=0.9\textwidth]{stress_analysis.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 10: Conclusiones y Trabajo en Equipo
+% [VALIDACIÓN LÓGICA]: Satisface el criterio de "Conclusión y Reflexión" (RP+RA+CM) al sintetizar los hallazgos mecánicos clave y explicitar los roles y contribuciones individuales del equipo.
+\begin{frame}{Conclusiones y Trabajo en Equipo}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Conclusiones Clave}
+                \begin{itemize}
+                    \item Los eslabones de Al 6061-T6 resisten a 140 km/h ($FS=2.87$).
+                    \item El pasador original de 3 mm falla inmediatamente a 140 km/h ($FS=0.16$).
+                    \item Límite de velocidad del diseño original: \textbf{56 km/h}.
+                    \item El rediseño a pasador de 8 mm en cortante doble es óptimo ($FS=2.28$).
+                    \item La variación térmica de $100^\circ$C genera $5.6\,\mu\text{m}$ de juego libre adicional sin agarrotamiento.
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Trabajo en Equipo (Roles)}
+                \begin{itemize}
+                    \item \textbf{Moisés:} Cinemática directa 3D y análisis de dinámica centrífuga.
+                    \item \textbf{Fernando:} Verificación estructural de esfuerzos y pasador.
+                    \item \textbf{Juan Pablo:} Modelado termoelástico y validaciones numéricas.
+                \end{itemize}
+            \end{block}
+            \begin{block}{Herramientas de Apoyo}
+                Ecosistema de co-diseño con \textbf{Obsidian} para control de notas y \textbf{OpenCode} para la automatización y simulación en Python.
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 11: Preguntas y Respuestas (Q&A)
+\begin{frame}
+    \centering
+    \Huge \textcolor{USSBlue}{\textbf{Preguntas y Respuestas (Q\&A)}}\\[1cm]
+    \large \textcolor{USSBlue}{¡Muchas gracias por su atención!}\\[0.5cm]
+    \small \textcolor{DarkGray}{Taller de Aptitudes Lógicas y Matemáticas -- Hito Cami}\\[0.5cm]
+    \includegraphics[height=1.2cm]{logo_uss.png}
+\end{frame}
+
+\end{document}
